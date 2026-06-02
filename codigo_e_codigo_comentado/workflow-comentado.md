@@ -184,7 +184,7 @@ Atualiza:
 - foi_enviado
 
 Define:
-`foi_enviado = ENVIADO`
+`foi_enviado=ENVIADO`
 
 Objetivo:
 Criar histórico e impedir reenvios.

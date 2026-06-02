@@ -38,7 +38,7 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true,
+              "caanBeUsedToMatch": true,
               "removed": false
             },
             {

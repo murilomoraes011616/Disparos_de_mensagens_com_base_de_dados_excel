@@ -1,32 +1,43 @@
+# Automação de Disparo de Mensagens WhatsApp com IA (n8n + Gemini + Evolution API)
+
 ## Sobre a documentação
 
 Este repositório foi organizado para facilitar tanto a compreensão do projeto quanto a análise da implementação técnica. O arquivo **README** apresenta uma explicação visual do workflow, descrevendo cada etapa da automação através de imagens do n8n e explicações sobre o funcionamento de cada bloco do processo. Para quem deseja analisar a implementação técnica em maior profundidade, a pasta **codigo_e_codigo-comentado** contém o arquivo JSON original exportado do n8n, utilizado para importar e executar o workflow, além de uma versão comentada da automação com explicações detalhadas sobre a função de cada nó, regras de negócio e lógica aplicada durante o processamento. Dessa forma, o README serve como documentação funcional do projeto, enquanto os arquivos da pasta de código servem como documentação técnica e implementação da solução.
 
+---
 
-
+## 📌 Visão Geral
 
 Este projeto consiste em uma automação desenvolvida no n8n para envio de mensagens personalizadas via WhatsApp utilizando Inteligência Artificial (Google Gemini).
 
 O fluxo realiza a leitura de contatos armazenados em uma planilha do Google Sheets, gera mensagens personalizadas com IA, envia as mensagens através da Evolution API, controla intervalos aleatórios entre os disparos e registra quais contatos já foram processados para evitar envios duplicados.
 
+---
+
 # 🎯 Objetivo
 
 Automatizar campanhas de reativação de pacientes de forma personalizada, simulando uma comunicação natural e reduzindo atividades manuais.
 
-🚀 Tecnologias Utilizadas
-n8n
-Google Sheets
-Google Gemini
-Evolution API
-JavaScript
-WhatsApp
+---
 
-# 📂 Arquitetura do Projeto:
+# 🚀 Tecnologias Utilizadas
+
+- n8n
+- Google Sheets
+- Google Gemini
+- Evolution API
+- JavaScript
+- WhatsApp
+
+---
+
+# 📂 Arquitetura do Projeto
 
 ![Fluxo Completo](image.png)
 
 O fluxo segue a seguinte arquitetura:
 
+```text
 Schedule Trigger
         ↓
 Google Sheets
@@ -50,78 +61,100 @@ Tempo Aleatório
 Atualização Google Sheets
         ↓
 Próximo Contato
+```
 
+---
 
 # ⚙️ Funcionamento do Workflow
 
-1. Acionamento Automático
+## 1. Acionamento Automático
 
 ![alt text](image-1.png)
 
 O workflow é iniciado automaticamente através de três nós Schedule Trigger configurados para executar em horários diferentes ao longo do dia.
 
-Objetivo
+### Objetivo
 
 Distribuir os disparos ao longo do dia, evitando concentração excessiva de mensagens em um único período.
 
-Benefícios
-Melhor distribuição de carga.
-Menor risco de bloqueios.
-Processamento contínuo da base de contatos.
+### Benefícios
 
-2. Leitura dos Contatos
+- Melhor distribuição de carga.
+- Menor risco de bloqueios.
+- Processamento contínuo da base de contatos.
+
+---
+
+## 2. Leitura dos Contatos
 
 ![alt text](image-2.png)
 
 Após o acionamento, o workflow consulta uma planilha hospedada no Google Sheets.
 
-Estrutura da Planilha
-Nome	Número	Feito
-João Silva	19999999999	
-Maria Souza	19888888888	Sim
-Critério de Seleção
+### Estrutura da Planilha
 
-Somente contatos cuja coluna Feito esteja vazia são processados.
+| Nome | Número | Feito |
+|--------|--------|--------|
+| João Silva | 19999999999 | |
+| Maria Souza | 19888888888 | Sim |
 
-Controle de Duplicidade
+### Critério de Seleção
 
-A coluna Feito funciona como um marcador para indicar que aquele contato já recebeu mensagem anteriormente.
+Somente contatos cuja coluna **Feito** esteja vazia são processados.
 
-3. Limitação do Volume de Processamento
+### Controle de Duplicidade
+
+A coluna **Feito** funciona como um marcador para indicar que aquele contato já recebeu mensagem anteriormente.
+
+---
+
+## 3. Limitação do Volume de Processamento
 
 Após a leitura dos registros, um nó Limit restringe a quantidade de contatos processados em cada execução.
 
-Objetivos
-Evitar sobrecarga da API.
-Melhorar estabilidade do workflow.
-Controlar volume de disparos.
+### Objetivos
 
-4. Processamento Individual dos Contatos
+- Evitar sobrecarga da API.
+- Melhorar estabilidade do workflow.
+- Controlar volume de disparos.
+
+---
+
+## 4. Processamento Individual dos Contatos
 
 ![alt text](image-3.png)
 
 Os registros são enviados para um Loop Over Items, garantindo que cada contato seja processado individualmente.
 
-Fluxo
+### Fluxo
+
+```text
 Contato
     ↓
 Validação
     ↓
 IA
     ↓
-Próximo Contat
-o
-5. Geração de Mensagens com Inteligência Artificial
-Modelo Utilizado
+Próximo Contato
+```
+
+---
+
+## 5. Geração de Mensagens com Inteligência Artificial
+
+### Modelo Utilizado
 
 Google Gemini
 
 O agente recebe informações provenientes da planilha:
 
-Nome do paciente
-Número de telefone
-Contexto do atendimento
-Exemplo de Prompt
+- Nome do paciente
+- Número de telefone
+- Contexto do atendimento
+
+### Exemplo de Prompt
+
+```text
 <CONTATO>{{numero}}</CONTATO>
 
 <CLIENTE>
@@ -136,138 +169,179 @@ Estava revisando alguns atendimentos e lembrei-me de você.
 Espero que esteja bem.
 
 Caso esteja sentindo alguma dor recente ou queira prevenir desconfortos, posso ajudar.
-Objetivo
+```
+
+### Objetivo
 
 Gerar mensagens personalizadas e menos robotizadas.
 
-Benefícios
-Maior taxa de resposta.
-Comunicação humanizada.
-Personalização automática.
+### Benefícios
 
-6. Structured Output Parser
+- Maior taxa de resposta.
+- Comunicação humanizada.
+- Personalização automática.
+
+---
+
+## 6. Structured Output Parser
 
 O retorno da IA passa por um Structured Output Parser.
 
-Função
+### Função
 
 Padronizar a estrutura da resposta para utilização nos próximos nós do workflow.
 
-Benefícios
-Menos erros.
-Maior previsibilidade.
-Integração simplificada.
+### Benefícios
 
-7. Preparação dos Dados
+- Menos erros.
+- Maior previsibilidade.
+- Integração simplificada.
+
+---
+
+## 7. Preparação dos Dados
 
 ![alt text](image-4.png)
 
 Os nós Edit Fields e Split Out são responsáveis por organizar e separar os dados retornados pela IA.
 
-Exemplo
+### Exemplo
 
 Antes:
 
+```json
 {
   "mensagem": "...",
   "numero": "...",
   "nome": "..."
 }
+```
 
 Depois:
 
+```text
 mensagem
 numero
 nome
+```
 
-8. Envio das Mensagens
+---
+
+## 8. Envio das Mensagens
 
 O envio é realizado através da Evolution API, responsável pela integração com o WhatsApp.
 
-Dados enviados
-Número do destinatário
-Mensagem personalizada gerada pela IA
-Resultado
+### Dados enviados
+
+- Número do destinatário
+- Mensagem personalizada gerada pela IA
+
+### Resultado
 
 Cada paciente recebe uma mensagem única, personalizada e contextualizada.
 
-9. Intervalo Aleatório entre Disparos
+---
+
+## 9. Intervalo Aleatório entre Disparos
 
 Após cada envio, um nó JavaScript gera um tempo de espera aleatório.
 
-Objetivo
+### Objetivo
 
 Simular um comportamento mais natural durante os disparos.
 
-Exemplo
-const tempo = Math.floor(Math.random() * 60) + 30;
-Possíveis resultados
-35 segundos
-48 segundos
-61 segundos
-82 segundos
+### Exemplo
 
-10. Controle de Espera
+```javascript
+const tempo = Math.floor(Math.random() * 60) + 30;
+```
+
+### Possíveis resultados
+
+- 35 segundos
+- 48 segundos
+- 61 segundos
+- 82 segundos
+
+---
+
+## 10. Controle de Espera
 
 O nó Wait recebe o valor gerado pelo JavaScript e pausa o workflow pelo período sorteado.
 
-Benefícios
-Reduz risco de bloqueios.
-Disparos mais naturais.
-Melhor estabilidade da operação.
+### Benefícios
 
-11. Atualização da Base
+- Reduz risco de bloqueios.
+- Disparos mais naturais.
+- Melhor estabilidade da operação.
+
+---
+
+## 11. Atualização da Base
 
 Após o envio bem-sucedido, o workflow atualiza a linha correspondente na planilha.
 
-Campo Atualizado
+### Campo Atualizado
+
+```text
 Feito
-Exemplo
+```
+
+### Exemplo
 
 Antes:
 
-Nome	Número	Feito
-João	19999999999	
+| Nome | Número | Feito |
+|--------|--------|--------|
+| João | 19999999999 | |
 
 Depois:
 
-Nome	Número	Feito
-João	19999999999	Sim
+| Nome | Número | Feito |
+|--------|--------|--------|
+| João | 19999999999 | Sim |
 
-12. Encerramento do Processo
+---
+
+## 12. Encerramento do Processo
 
 Quando não existem mais registros pendentes:
 
+```text
 Quantidade de contatos = 0
+```
 
 O workflow encerra a execução.
 
 Na próxima execução programada pelos Schedules, a planilha será consultada novamente.
 
+---
+
 ## 🔒 Controle de Segurança
 
 O projeto possui mecanismos para evitar:
 
-Mensagens duplicadas.
-Processamento repetido de contatos.
-Sobrecarga da API.
-Disparos excessivamente rápidos.
-📈 Possíveis Melhorias Futuras
-Dashboard de acompanhamento.
-Registro de métricas em banco de dados.
-Integração com CRM.
-Segmentação de campanhas.
-Geração de relatórios automáticos.
-Acompanhamento de respostas recebidas.
-Integração com OpenAI, Claude ou outros modelos LLM.
+- Mensagens duplicadas.
+- Processamento repetido de contatos.
+- Sobrecarga da API.
+- Disparos excessivamente rápidos.
 
-##  👨‍💻 Autor
+---
 
-Murilo Moraes Oliveira
+## 📈 Possíveis Melhorias Futuras
+
+- Dashboard de acompanhamento.
+- Registro de métricas em banco de dados.
+- Integração com CRM.
+- Segmentação de campanhas.
+- Geração de relatórios automáticos.
+- Acompanhamento de respostas recebidas.
+- Integração com OpenAI, Claude ou outros modelos LLM.
+
+---
+
+## 👨‍💻 Autor
+
+**Murilo Moraes Oliveira**
 
 Projeto desenvolvido para estudos de automação, Inteligência Artificial e integração de sistemas utilizando n8n, Google Gemini e Evolution API.
-
-
-
-
-
