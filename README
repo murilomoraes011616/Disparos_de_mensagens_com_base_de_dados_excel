@@ -1,0 +1,22 @@
+README - Automação de Disparo de Mensagens WhatsApp com IA (n8n + Gemini + Evolution API)
+📌 Visão Geral
+
+Este projeto consiste em uma automação desenvolvida no n8n para envio de mensagens personalizadas via WhatsApp utilizando Inteligência Artificial (Google Gemini).
+
+O fluxo realiza a leitura de contatos armazenados em uma planilha do Google Sheets, gera mensagens personalizadas com IA, envia as mensagens através da Evolution API, controla intervalos aleatórios entre os disparos e registra quais contatos já foram processados para evitar envios duplicados.
+
+🎯 Objetivo
+
+Automatizar campanhas de reativação de pacientes de forma personalizada, simulando uma comunicação natural e reduzindo atividades manuais.
+
+🚀 Tecnologias Utilizadas
+n8n
+Google Sheets
+Google Gemini
+Evolution API
+JavaScript
+WhatsApp
+📂 Arquitetura do Projeto:
+
+
+
