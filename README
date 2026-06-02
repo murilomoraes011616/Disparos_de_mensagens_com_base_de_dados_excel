@@ -195,6 +195,7 @@ Possíveis resultados
 48 segundos
 61 segundos
 82 segundos
+
 10. Controle de Espera
 
 O nó Wait recebe o valor gerado pelo JavaScript e pausa o workflow pelo período sorteado.
@@ -203,6 +204,7 @@ Benefícios
 Reduz risco de bloqueios.
 Disparos mais naturais.
 Melhor estabilidade da operação.
+
 11. Atualização da Base
 
 Após o envio bem-sucedido, o workflow atualiza a linha correspondente na planilha.
@@ -220,6 +222,7 @@ Depois:
 
 Nome	Número	Feito
 João	19999999999	Sim
+
 12. Encerramento do Processo
 
 Quando não existem mais registros pendentes:

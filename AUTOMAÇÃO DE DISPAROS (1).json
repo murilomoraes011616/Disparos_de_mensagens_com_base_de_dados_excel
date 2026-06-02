@@ -1,0 +1,753 @@
+{
+  "name": "AUTOMAÇÃO DE DISPAROS",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1LKIZ02_I_IIJ4ZkSz29H85aPOpatmYYXLsS52VhpgJk",
+          "mode": "list",
+          "cachedResultName": "contatos disparo doutor alfredo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LKIZ02_I_IIJ4ZkSz29H85aPOpatmYYXLsS52VhpgJk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1324572859,
+          "mode": "list",
+          "cachedResultName": "contatos_pacientes_com_ddi_ddd.csv",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LKIZ02_I_IIJ4ZkSz29H85aPOpatmYYXLsS52VhpgJk/edit#gid=1324572859"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nome": "={{ $('Edit Fields1').item.json.output.name }}",
+            "numero": "={{ $('Edit Fields1').item.json.output.numero }}",
+            "mensagem": "={{ $('Edit Fields1').item.json.output.text[0] }}",
+            "data_hora": "={{ $now.format('dd/MM/yyyy hh:mm:ss') }}",
+            "foi_enviado": "ENVIADO"
+          },
+          "matchingColumns": [
+            "nome"
+          ],
+          "schema": [
+            {
+              "id": "numero",
+              "displayName": "numero",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "data_hora",
+              "displayName": "data_hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "foi_enviado",
+              "displayName": "foi_enviado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3808,
+        144
+      ],
+      "id": "cf27dea8-f521-48fd-9da6-de2656a71256",
+      "name": "Update row in sheet",
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMnpkZH75A5Epx76",
+          "name": "eliana sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 13
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        0
+      ],
+      "id": "8ba0e9a7-cd2e-412b-897d-afc5ee2b809c",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1264,
+        160
+      ],
+      "id": "66580d14-1b6d-4367-bd44-5028c64f1776",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "445801b2-d1e8-4f8c-af92-147b7d4ef081",
+              "leftValue": "={{ $json['foi_enviado'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1488,
+        176
+      ],
+      "id": "e0fb6973-9b00-4cbd-8c8e-72e657b29c5f",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=<CONTATO>{{ $json.numero }}</CONTATO>\n<CLIENTE>nome do paciente {{ $json.nome }}</CLIENTE>\n<EXEMPLO> Olá,{{ $json.nome }} , Boa tarde\n\nOlá, aqui é o Dr Alfredo \nEstava revisando alguns atendimentos e lembrei-me de vc, espero que esteja bem.\nCaso esteja sentindo alguma dor recente ou queira prevenir desconfortos, posso te ajudar.\n\n\n( A Osteopatia é um sistema de avaliação e tratamento manual e natural, que visa restabelecer a função das estruturas e sistemas corporais.\nPossibilita, por meio de um diagnóstico minucioso e tratamento específico, condições ideais para o funcionamento do organismo e a manutenção da saúde.)\n\no que acha de marcarmos uma consulta para que você retorne aqui?",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Você é uma assistente comercial e a sua função é criar uma mensagem de whats app personalizada para o cliente <CLIENTE></CLIENTE>. você é dono de um consultorio, seu nome é doutor Alfredo que trabalha com osteopatia e fisioterapia.\n\n\nA mensagem deve ser neste modelo <EXEMPLO></EXEMPLO> de mensagem, modifique o texto preservando as informações importantes e a estrutura, como se estivesse mandando uma mensagem a um paciente antigo, preserve o nome do cliente <CLIENTE></CLIENTE>.\n\n\nretorne o nome do paciente na evariavel 'nome', nunca retone o nome de doutor alfredo nessa variavel\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1872,
+        160
+      ],
+      "id": "438460d9-0c4e-4521-a365-be73a046fa21",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {
+          "temperature": 0.8
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1712,
+        400
+      ],
+      "id": "837a0432-ae25-4dcf-802b-79a9ed62a6d2",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "wPOLrph91h86rtvw",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1488,
+        -32
+      ],
+      "id": "3e0b76ac-7ed2-4caa-8365-67fc7aded92e",
+      "name": "faz nada"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"name\": \"nome do paciente aqui\",\n  \"numero\": \"numero de telefone aqui\",\n  \"text\": \"mensagem enviada aqui\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2064,
+        400
+      ],
+      "id": "3fab2d13-ed6f-4b85-b8be-9352a9e1176c",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4b0b102f-d918-41ef-bbe1-ed6cd362afa0",
+              "name": "output.name",
+              "value": "={{ $json.output.name }}",
+              "type": "string"
+            },
+            {
+              "id": "511715b7-7e00-4590-a321-0531b76c5846",
+              "name": "output.numero",
+              "value": "={{ $json.output.numero }}",
+              "type": "string"
+            },
+            {
+              "id": "54d2f63c-a227-4252-a6af-ead9c35a40eb",
+              "name": "output.text",
+              "value": "={{ $json.output.text.split('\\n\\n') }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2336,
+        160
+      ],
+      "id": "243f42c4-b69b-4982-b1d2-bda7e1418d5d",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        2592,
+        160
+      ],
+      "id": "40b2e84f-5589-4bdf-8583-18955472a98b",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": "={{ $('loop').context.done }}"
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2816,
+        160
+      ],
+      "id": "400c141e-e569-4e5c-9b56-546216b47b0a",
+      "name": "loop"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "disparo dr alfredo",
+        "remoteJid": "={{ $('Edit Fields1').item.json.output.numero }}",
+        "messageText": "={{ $('Split Out').item.json['output.text'] }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        3152,
+        144
+      ],
+      "id": "518c1e78-d8e4-4412-b11d-7d4c124c14f1",
+      "name": "Enviar texto",
+      "credentials": {
+        "evolutionApi": {
+          "id": "dZqVouetgkWKBFkr",
+          "name": "DISPARO 30 MIN E DAS 8H DOUTOR ALFREDO"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.waitTime }}"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        3600,
+        144
+      ],
+      "id": "a9421fc8-ef60-4968-8c5a-65b684c5c8c9",
+      "name": "Wait1",
+      "webhookId": "7cb777c7-36bc-40bf-b9a9-8695031559ea"
+    },
+    {
+      "parameters": {
+        "jsCode": " // Defina constantes para os valores mínimo e máximo\n const MIN_TIME = 40; // Tempo mínimo em segundos\n const MAX_TIME = 100; // Tempo máximo em segundos\n\n // Gere um número aleatório entre o mínimo e o máximo\n const randomTime = Math.floor(Math.random() * (MAX_TIME - MIN_TIME + 1)) + MIN_TIME;\n\n // Retorne o valor gerado\n return {\n   json: {\n     waitTime: randomTime\n   }\n };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3360,
+        144
+      ],
+      "id": "d14cba94-7a54-4e3a-bb55-c060cf797dcd",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 912,
+        "width": 4000,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        112,
+        -64
+      ],
+      "id": "8e184c9d-42c8-455a-88c1-60023b832fc5",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "jsCode": " // Defina constantes para os valores mínimo e máximo\n const MIN_TIME = 10; // Tempo mínimo em segundos\n const MAX_TIME = 60; // Tempo máximo em segundos\n\n // Gere um número aleatório entre o mínimo e o máximo\n const randomTime = Math.floor(Math.random() * (MAX_TIME - MIN_TIME + 1)) + MIN_TIME;\n\n // Retorne o valor gerado\n return {\n   json: {\n     waitTime: randomTime\n   }\n };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3088,
+        416
+      ],
+      "id": "3d24a8d9-b297-44e6-81c3-3fa8d22bcc51",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.waitTime }}"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        3408,
+        528
+      ],
+      "id": "16a1ac87-7d4a-4c3b-bc85-1976164cec2c",
+      "name": "Wait7",
+      "webhookId": "7cb777c7-36bc-40bf-b9a9-8695031559ea"
+    },
+    {
+      "parameters": {
+        "maxItems": 20
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        768,
+        160
+      ],
+      "id": "2d7fcb83-0f7c-4be7-94f8-42f4ebdbb9e4",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        208
+      ],
+      "id": "60a975d0-5642-4b61-828c-bae275e0eda8",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 11
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        400
+      ],
+      "id": "06ca1905-34b9-44ec-9e0b-a38c5cf7a78c",
+      "name": "Schedule Trigger2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1LKIZ02_I_IIJ4ZkSz29H85aPOpatmYYXLsS52VhpgJk",
+          "mode": "list",
+          "cachedResultName": "contatos disparo doutor alfredo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LKIZ02_I_IIJ4ZkSz29H85aPOpatmYYXLsS52VhpgJk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1324572859,
+          "mode": "list",
+          "cachedResultName": "contatos_pacientes_com_ddi_ddd.csv",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LKIZ02_I_IIJ4ZkSz29H85aPOpatmYYXLsS52VhpgJk/edit#gid=1324572859"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "foi_enviado"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        560,
+        160
+      ],
+      "id": "8efba5e7-2f10-47ac-9d8d-f45b2a935a8b",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMnpkZH75A5Epx76",
+          "name": "eliana sheets"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "faz nada",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "loop": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar texto": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Wait7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait7": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger2": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fb66a765-914f-4b19-858e-5ccef006e31f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "301f5c843440a9b341c141969b19b737116462fcd571d7329c3e4397081534a1"
+  },
+  "id": "9KJqjftOW2QnTJEd",
+  "tags": [
+    {
+      "updatedAt": "2025-11-09T05:20:53.472Z",
+      "createdAt": "2025-11-09T05:20:53.472Z",
+      "id": "5wLsnZIn48GAupJO",
+      "name": "ok"
+    },
+    {
+      "updatedAt": "2025-11-09T05:48:55.615Z",
+      "createdAt": "2025-11-09T05:48:55.615Z",
+      "id": "eOyZknux3p2T6laK",
+      "name": "doutor alfredo"
+    }
+  ]
+}
