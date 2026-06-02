@@ -18,5 +18,242 @@ JavaScript
 WhatsApp
 📂 Arquitetura do Projeto:
 
+![Fluxo Completo](image.png)
+
+O fluxo segue a seguinte arquitetura:
+
+Schedule Trigger
+        ↓
+Google Sheets
+        ↓
+Filtro de registros pendentes
+        ↓
+Limit
+        ↓
+Loop
+        ↓
+Gemini AI
+        ↓
+Structured Output
+        ↓
+Preparação dos Dados
+        ↓
+Evolution API
+        ↓
+Tempo Aleatório
+        ↓
+Atualização Google Sheets
+        ↓
+Próximo Contato
+⚙️ Funcionamento do Workflow
+1. Acionamento Automático
+
+![alt text](image-1.png)
+
+O workflow é iniciado automaticamente através de três nós Schedule Trigger configurados para executar em horários diferentes ao longo do dia.
+
+Objetivo
+
+Distribuir os disparos ao longo do dia, evitando concentração excessiva de mensagens em um único período.
+
+Benefícios
+Melhor distribuição de carga.
+Menor risco de bloqueios.
+Processamento contínuo da base de contatos.
+
+2. Leitura dos Contatos
+
+![alt text](image-2.png)
+
+Após o acionamento, o workflow consulta uma planilha hospedada no Google Sheets.
+
+Estrutura da Planilha
+Nome	Número	Feito
+João Silva	19999999999	
+Maria Souza	19888888888	Sim
+Critério de Seleção
+
+Somente contatos cuja coluna Feito esteja vazia são processados.
+
+Controle de Duplicidade
+
+A coluna Feito funciona como um marcador para indicar que aquele contato já recebeu mensagem anteriormente.
+
+3. Limitação do Volume de Processamento
+
+Após a leitura dos registros, um nó Limit restringe a quantidade de contatos processados em cada execução.
+
+Objetivos
+Evitar sobrecarga da API.
+Melhorar estabilidade do workflow.
+Controlar volume de disparos.
+
+4. Processamento Individual dos Contatos
+
+![alt text](image-3.png)
+
+Os registros são enviados para um Loop Over Items, garantindo que cada contato seja processado individualmente.
+
+Fluxo
+Contato
+    ↓
+Validação
+    ↓
+IA
+    ↓
+Próximo Contato
+5. Geração de Mensagens com Inteligência Artificial
+Modelo Utilizado
+
+Google Gemini
+
+O agente recebe informações provenientes da planilha:
+
+Nome do paciente
+Número de telefone
+Contexto do atendimento
+Exemplo de Prompt
+<CONTATO>{{numero}}</CONTATO>
+
+<CLIENTE>
+nome do paciente {{nome}}
+</CLIENTE>
+
+Olá {{nome}}, boa tarde.
+
+Aqui é o Dr. Alfredo.
+
+Estava revisando alguns atendimentos e lembrei-me de você.
+Espero que esteja bem.
+
+Caso esteja sentindo alguma dor recente ou queira prevenir desconfortos, posso ajudar.
+Objetivo
+
+Gerar mensagens personalizadas e menos robotizadas.
+
+Benefícios
+Maior taxa de resposta.
+Comunicação humanizada.
+Personalização automática.
+6. Structured Output Parser
+
+O retorno da IA passa por um Structured Output Parser.
+
+Função
+
+Padronizar a estrutura da resposta para utilização nos próximos nós do workflow.
+
+Benefícios
+Menos erros.
+Maior previsibilidade.
+Integração simplificada.
+
+7. Preparação dos Dados
+
+![alt text](image-4.png)
+
+Os nós Edit Fields e Split Out são responsáveis por organizar e separar os dados retornados pela IA.
+
+Exemplo
+
+Antes:
+
+{
+  "mensagem": "...",
+  "numero": "...",
+  "nome": "..."
+}
+
+Depois:
+
+mensagem
+numero
+nome
+8. Envio das Mensagens
+
+O envio é realizado através da Evolution API, responsável pela integração com o WhatsApp.
+
+Dados enviados
+Número do destinatário
+Mensagem personalizada gerada pela IA
+Resultado
+
+Cada paciente recebe uma mensagem única, personalizada e contextualizada.
+
+9. Intervalo Aleatório entre Disparos
+
+Após cada envio, um nó JavaScript gera um tempo de espera aleatório.
+
+Objetivo
+
+Simular um comportamento mais natural durante os disparos.
+
+Exemplo
+const tempo = Math.floor(Math.random() * 60) + 30;
+Possíveis resultados
+35 segundos
+48 segundos
+61 segundos
+82 segundos
+10. Controle de Espera
+
+O nó Wait recebe o valor gerado pelo JavaScript e pausa o workflow pelo período sorteado.
+
+Benefícios
+Reduz risco de bloqueios.
+Disparos mais naturais.
+Melhor estabilidade da operação.
+11. Atualização da Base
+
+Após o envio bem-sucedido, o workflow atualiza a linha correspondente na planilha.
+
+Campo Atualizado
+Feito
+Exemplo
+
+Antes:
+
+Nome	Número	Feito
+João	19999999999	
+
+Depois:
+
+Nome	Número	Feito
+João	19999999999	Sim
+12. Encerramento do Processo
+
+Quando não existem mais registros pendentes:
+
+Quantidade de contatos = 0
+
+O workflow encerra a execução.
+
+Na próxima execução programada pelos Schedules, a planilha será consultada novamente.
+
+🔒 Controle de Segurança
+
+O projeto possui mecanismos para evitar:
+
+Mensagens duplicadas.
+Processamento repetido de contatos.
+Sobrecarga da API.
+Disparos excessivamente rápidos.
+📈 Possíveis Melhorias Futuras
+Dashboard de acompanhamento.
+Registro de métricas em banco de dados.
+Integração com CRM.
+Segmentação de campanhas.
+Geração de relatórios automáticos.
+Acompanhamento de respostas recebidas.
+Integração com OpenAI, Claude ou outros modelos LLM.
+
+👨‍💻 Autor
+
+Murilo Moraes Oliveira
+
+Projeto desenvolvido para estudos de automação, Inteligência Artificial e integração de sistemas utilizando n8n, Google Gemini e Evolution API.
+
+
+
 
 
