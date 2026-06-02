@@ -1,11 +1,15 @@
-README - Automação de Disparo de Mensagens WhatsApp com IA (n8n + Gemini + Evolution API)
-📌 Visão Geral
+## Sobre a documentação
+
+Este repositório foi organizado para facilitar tanto a compreensão do projeto quanto a análise da implementação técnica. O arquivo **README** apresenta uma explicação visual do workflow, descrevendo cada etapa da automação através de imagens do n8n e explicações sobre o funcionamento de cada bloco do processo. Para quem deseja analisar a implementação técnica em maior profundidade, a pasta **codigo_e_codigo-comentado** contém o arquivo JSON original exportado do n8n, utilizado para importar e executar o workflow, além de uma versão comentada da automação com explicações detalhadas sobre a função de cada nó, regras de negócio e lógica aplicada durante o processamento. Dessa forma, o README serve como documentação funcional do projeto, enquanto os arquivos da pasta de código servem como documentação técnica e implementação da solução.
+
+
+
 
 Este projeto consiste em uma automação desenvolvida no n8n para envio de mensagens personalizadas via WhatsApp utilizando Inteligência Artificial (Google Gemini).
 
 O fluxo realiza a leitura de contatos armazenados em uma planilha do Google Sheets, gera mensagens personalizadas com IA, envia as mensagens através da Evolution API, controla intervalos aleatórios entre os disparos e registra quais contatos já foram processados para evitar envios duplicados.
 
-🎯 Objetivo
+# 🎯 Objetivo
 
 Automatizar campanhas de reativação de pacientes de forma personalizada, simulando uma comunicação natural e reduzindo atividades manuais.
 
@@ -16,7 +20,8 @@ Google Gemini
 Evolution API
 JavaScript
 WhatsApp
-📂 Arquitetura do Projeto:
+
+# 📂 Arquitetura do Projeto:
 
 ![Fluxo Completo](image.png)
 
@@ -45,7 +50,10 @@ Tempo Aleatório
 Atualização Google Sheets
         ↓
 Próximo Contato
-⚙️ Funcionamento do Workflow
+
+
+# ⚙️ Funcionamento do Workflow
+
 1. Acionamento Automático
 
 ![alt text](image-1.png)
@@ -101,7 +109,8 @@ Validação
     ↓
 IA
     ↓
-Próximo Contato
+Próximo Contat
+o
 5. Geração de Mensagens com Inteligência Artificial
 Modelo Utilizado
 
@@ -135,6 +144,7 @@ Benefícios
 Maior taxa de resposta.
 Comunicação humanizada.
 Personalização automática.
+
 6. Structured Output Parser
 
 O retorno da IA passa por um Structured Output Parser.
@@ -169,6 +179,7 @@ Depois:
 mensagem
 numero
 nome
+
 8. Envio das Mensagens
 
 O envio é realizado através da Evolution API, responsável pela integração com o WhatsApp.
@@ -233,7 +244,7 @@ O workflow encerra a execução.
 
 Na próxima execução programada pelos Schedules, a planilha será consultada novamente.
 
-🔒 Controle de Segurança
+## 🔒 Controle de Segurança
 
 O projeto possui mecanismos para evitar:
 
@@ -250,7 +261,7 @@ Geração de relatórios automáticos.
 Acompanhamento de respostas recebidas.
 Integração com OpenAI, Claude ou outros modelos LLM.
 
-👨‍💻 Autor
+##  👨‍💻 Autor
 
 Murilo Moraes Oliveira
 
